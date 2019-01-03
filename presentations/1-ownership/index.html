@@ -78,7 +78,7 @@ Notes for the _first_ slide!
 
 # Für was nicht?
 
-Für einige grundlegende Datentype die sehr leicht kopiert werden können(Copy Trait).
+Für einige grundlegende Datentype die sehr leicht kopiert werden können (Copy Trait).
 
 - Integer
 - Floats
@@ -89,21 +89,40 @@ Für einige grundlegende Datentype die sehr leicht kopiert werden können(Copy T
 
 ---
 
-# Beispiel für Copy den Trait
+# Beispiel für den Copy Trait
 ```rs
 	let a = 5;
 	let b = a;
-	// Sowohl a als auch b sind gültig das a Kopiert anstat verschoben wird.
+	// Sowohl a als auch b sind gültig da a kopiert anstatt verschoben wird.
 ```
 ---
 
 # Borrowing 
 Anstatt den Besitz zu verschieben kann man auch Referenzen auf Werte erstellen.
 Dabei gilt es kann zu jedem Zeitpunkt entweder
-- Genau eine mutable Reference
-- oder eine oder 
+- Genau eine mutable Referenze
 
-# Beispiel für Ownership als Teil der Anwendungslogik
+
+oder
+- eine oder mehrere immutable Referenze
+geben.
+
+Ziel einer Referenz muss mindestens so lang existiren wie die Referenz.
+
+---
+
+# Borrowing Beispiel / 1
+```rs 
+	let s = String::from("Hello World");
+	let s_ref1 = &s;
+	let s_ref2 = &s;
+	println!("s: {}, s_ref1: {}, s_ref2: {}", s, s_ref1, s_ref2);
+	// gibt alle aus
+```
+[Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=40c4f3fe0dc438b717742930c130192c)
+---
+
+# Ownership als Teil der Anwendungslogik
 
 Ein einfaches Gutscheinsystem, in dem Sichergestllt wird das ein Gutschein nur genau einmal ausgegeben werden kann.
 
