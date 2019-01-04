@@ -36,7 +36,7 @@ Notes for the _first_ slide!
 
 # Was ist Ownership?
 
-0. Ownership ist ein Konzept bei dem Resourcen jeweils genau einen Besitzer haben.
+0. Ownership ist ein Konzept bei dem Ressourcen jeweils genau einen Besitzer haben.
 0. Wenn der Besitzer freigegeben wird werden auch alle dessen Ressourcen freigegeben.
 
 ---
@@ -95,6 +95,7 @@ Für einige grundlegende Datentype die sehr leicht kopiert werden können (Copy 
 	let b = a;
 	// Sowohl a als auch b sind gültig da a kopiert anstatt verschoben wird.
 ```
+
 ---
 
 # Borrowing 
@@ -122,9 +123,71 @@ Ziel einer Referenz muss mindestens so lang existiren wie die Referenz.
 [Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=40c4f3fe0dc438b717742930c130192c)
 ---
 
+# Borrowing Beispiel / 2
+```rs 
+	leti mut s = String::from("Hello World");
+	let s_ref1 = &s;
+	let s_ref2 = &mut s;
+	println!("s: {}, s_ref1: {}, s_ref2: {}", s, s_ref1, s_ref2);
+	// kompiliert nicht, gleichzeitige ein immutable und ein mutable borrow
+```
+[Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=a281246334cba854e507578794a8608e)
+
+---
+
+# Borrowing Beispiel / 3
+```rs 
+	let mut s = String::from("Hello World");
+	let s_ref1 = &mut s;
+	let s_ref2 = &mut s;
+	println!("s: {}, s_ref1: {}, s_ref2: {}", s, s_ref1, s_ref2);
+	// kompiliert nicht, da zwei gleichzeitige muttable borrows
+```
+[Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d2db67b0862c87ffd9e3e9e8c9086a76)
+---
+# Borrowing Beispiel / 4
+```rs 
+	let  s = String::from("Hello World");
+	{
+		let s_ref1 = &mut s;
+		s_ref1.push('!');
+	}
+	let s_ref2 = &s;
+
+	println!("s: {}, s_ref2: {}", s, s_ref2);
+	// gibt zwei mal "Hello World!" aus.
+```
+[Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=1c03c97c1056e37d94161bca1d6aa9c5)
+---
+
 # Ownership als Teil der Anwendungslogik
 
-Ein einfaches Gutscheinsystem, in dem Sichergestllt wird das ein Gutschein nur genau einmal ausgegeben werden kann.
+Ein einfaches Gutscheinsystem, in dem Sichergestllt wird das ein Gutschein nur genau einmal benutzt werden kann.
+```rs
+pub struct Gutschein {}
+
+impl Gutschein {
+    pub fn new() -> Self {
+        println!("Erstelle Gutschein");
+        Gutschein{}
+    }
+}
+impl Drop for Gutschein {
+    fn drop(&mut self) {
+        println!("Lösche Gutschein")
+    }
+}
+
+pub fn benutze(g: Gutschein) {
+    println!("Gutschein wurde benutze")
+}
+
+fn main() {
+        let g = Gutschein::new();
+        benutze(g)
+}
+```
+
 
 
 
@@ -133,7 +196,7 @@ Ein einfaches Gutscheinsystem, in dem Sichergestllt wird das ein Gutschein nur g
 <script src="../_lib/js/remark.js" type="text/javascript">
 </script>
 <script type="text/javascript">
-    let slideshow = remark.create({ratio: "16:9"});
+	let slideshow = remark.create({ratio:"16:9"})
 </script>
 </body>
 </html>
